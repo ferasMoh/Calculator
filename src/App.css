@@ -1,0 +1,85 @@
+ body,
+ .all-squares,
+ .square,
+ .dialog {
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     text-align: center;
+     width: 100%;
+     height: 100vh;
+ }
+
+ body {
+     background-image: linear-gradient(to left, rgb(167, 210, 248), rgb(223, 243, 221));
+     font-family: cursive;
+ }
+
+ label {
+     font-weight: 800;
+     font-size: 45px;
+     color: rgb(153, 78, 78);
+ }
+
+ .all-squares {
+     width: 400px;
+     height: 400px;
+     flex-wrap: wrap;
+     margin-top: 20px;
+ }
+
+ .square {
+     width: 100px;
+     height: 100px;
+     font-size: 30px;
+     font-weight: 800;
+     background-color: rgb(97, 167, 228);
+     color: white;
+     margin: 10px;
+     cursor: pointer;
+ }
+
+ .square:hover {
+     background-color: rgb(153, 193, 228);
+     color: black
+ }
+
+
+ .reset {
+     width: 100px;
+     height: 50px;
+     background-color: rgb(190, 143, 72);
+     color: whitesmoke;
+     border: none;
+     border-radius: 3px;
+     font-size: 15px;
+     font-weight: 600;
+     cursor: pointer;
+ }
+
+ .reset:hover {
+     background-color: rgb(179, 117, 25);
+     color: black;
+ }
+
+ .dialog {
+     width: 400px;
+     height: 100px;
+     position: relative;
+     top: 60px;
+     font-size: 20px;
+     font-weight: 800;
+     border-radius: 10px;
+     background-color: green;
+     color: white;
+     opacity: 0;
+     box-shadow: 10px 10px 20px white;
+     visibility: hidden;
+     transition: opacity 1.5s ease, visibility 0s 2s;
+ }
+
+ .dialog-display {
+     opacity: 1;
+     visibility: visible;
+     transition: opacity 1.5s ease, visibility 0s;
+ }

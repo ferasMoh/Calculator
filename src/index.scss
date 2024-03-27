@@ -1,0 +1,26 @@
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+
+.flexCenter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.flexEnd {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.flexCenterColumn {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}

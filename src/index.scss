@@ -13,6 +13,19 @@
 
 }
 
+.flexEnd {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.flexEndItemsEnd {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    height: 80%;
+}
+
 .flexEndColumn {
     display: flex;
     flex-direction: column;

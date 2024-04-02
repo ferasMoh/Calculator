@@ -9,6 +9,9 @@
      .result {
          width: 380px;
          height: 120px;
+         text-align: end;
+         overflow-x: auto;
+         overflow-y: hidden;
          font-size: 30px;
          padding: 20px;
          border-radius: 10px;
@@ -16,10 +19,10 @@
          color: white;
          border: 1px solid grey;
 
-         p{
-            font-size: 17px;
-            color : rgb(211, 209, 209);
-            margin-right: 2px;
+         p {
+             font-size: 17px;
+             color: rgb(211, 209, 209);
+             margin-right: 2px;
          }
      }
 

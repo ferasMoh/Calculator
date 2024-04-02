@@ -20,7 +20,7 @@ function App() {
     }
   };
 
-  /* Calculate result function */
+  /* Calculate result by simple operation ( + - * / ) */
   const calcResult = () => {
     const num = Number(fullNumber);
     switch (operator) {
@@ -53,7 +53,7 @@ function App() {
     setFullNumber("0");
   };
 
-  /* Calculate percent function */
+  /* Calculate percent */
   const calcPercent = () => {
     const num = Number(fullNumber);
     const lastValue = Number(numbers.slice(-1));
@@ -64,6 +64,42 @@ function App() {
     }
     setShowResult(true);
     setFullNumber("0");
+  };
+
+  /* Calculate squared x² */
+  const calcSquared = () => {
+    const num = Number(fullNumber);
+    if (result === 0) {
+      setResult(num ** 2);
+    } else {
+      setResult((prev) => prev ** 2);
+    }
+    setShowResult(true);
+  };
+
+  /* Calculate Division by one */
+  const calcdivisionByOne = () => {
+    const num = Number(fullNumber);
+    result === 0 ? setResult(1 / num) : setResult((prev) => 1 / prev);
+    setShowResult(true);
+  };
+
+  /* Calculate Sqrt */
+  const calcSqrt = () => {
+    const num = Number(fullNumber);
+    result === 0
+      ? setResult(Math.sqrt(num))
+      : setResult((prev) => Math.sqrt(prev));
+    setShowResult(true);
+  };
+
+  /* Clear all data */
+  const clearAll = () => {
+    setFullNumber("0");
+    setNumbers([0]);
+    setOperator(null);
+    setResult(0);
+    setShowResult(false);
   };
 
   /* Handle click */
@@ -90,23 +126,68 @@ function App() {
       calcResult();
     } else if (innerHTML == "C" || innerHTML == "CE") {
       /* Clear All */
-      setFullNumber("0");
-      setNumbers([0]);
-      setOperator(null);
-      setResult(0);
-      setShowResult(false);
+      clearAll();
     } else if (innerHTML.includes("path")) {
       if (fullNumber !== "0") {
         setFullNumber(fullNumber.slice(0, fullNumber.length - 1));
       }
     } else if (innerHTML == "%") {
       calcPercent();
+    } else if (innerHTML == "1/x") {
+      calcdivisionByOne();
+    } else if (innerHTML == "x²") {
+      calcSquared();
+    } else if (innerHTML == "2√x") {
+      calcSqrt();
     } else {
       /* add operatation then calculate automatically */
       setOperator(innerHTML);
       setIsNumberTurn(false);
     }
   };
+
+  /* Handle keyboard keys */
+  React.useEffect(() => {
+    const handleKeyDown = (event) => {
+      let keyCodeAsNumber = Number(event.key);
+      let keyCodeAsString = String(event.key);
+
+      if (
+        event.key === "+" ||
+        event.key === "-" ||
+        event.key === "*" ||
+        event.key === "/"
+      ) {
+        event.key === "*" ? setOperator("x") : setOperator(event.key);
+        setIsNumberTurn(false);
+      } else if (
+        (keyCodeAsNumber >= 0 && keyCodeAsNumber <= 9) ||
+        event.key == "."
+      ) {
+        if (isNumberTurn) {
+          setShowResult(false);
+          if (
+            (event.key == "." && !fullNumber.includes(".")) ||
+            keyCodeAsString != "."
+          ) {
+            setFullNumber((prev) => prev + keyCodeAsString);
+          }
+
+          if (fullNumber[0] == "0") {
+            setFullNumber(keyCodeAsString);
+          }
+        }
+      } else if (event.key == "Enter") {
+        calcResult();
+      } else if (event.key == "Space") {
+        clearAll();
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
   /* zero fullNumber when his length arrive to 0 */
   React.useEffect(() => {
@@ -124,18 +205,41 @@ function App() {
     }
   }, [isNumberTurn]);
 
+  /* Show Result or full number by conditions */
+  const showResultOrFullNumber = () => {
+    let resultString = String(result);
+    if (showResult) {
+      if (resultString.length > 12) {
+        return resultString.slice(0, 12) + "...";
+      } else if (resultString === "Infinity") {
+        resultString = "Cannot divide by zero";
+        return resultString;
+      } else {
+        return resultString;
+      }
+    } else {
+      return fullNumber;
+    }
+  };
+
   console.log(numbers, fullNumber, result);
 
   return (
     <div className="app flexCenterColumn">
-      <div className="result flexEndColumn">
-        {operator && (
-          <div className="flexCenter">
+      <div className="result">
+        {operator && result != "Infinity" && (
+          <div className="flexEnd">
             <p>{result ? result : numbers.slice(-1)}</p>
             <p>{operator}</p>
           </div>
         )}
-        <h2>{showResult ? result : fullNumber}</h2>
+        <div className="flexEndItemsEnd">
+          {result == "Infinity" ? (
+            <h4>{showResultOrFullNumber()}</h4>
+          ) : (
+            <h2>{showResultOrFullNumber()}</h2>
+          )}
+        </div>
       </div>
       <div className="squares flexCenter">
         {squaresArray.map((item, index) => {

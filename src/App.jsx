@@ -104,70 +104,19 @@ function App() {
 
   /* Handle click */
   const handleClick = (e) => {
-    const innerHTML = e.target.innerHTML;
-    if ((innerHTML >= 0 && innerHTML <= 9) || innerHTML == ".") {
-      if (isNumberTurn) {
-        setShowResult(false);
-        if (
-          (innerHTML == "." && !fullNumber.includes(".")) ||
-          innerHTML !== "."
-        ) {
-          setFullNumber((prev) => prev + innerHTML);
-        }
-        if (fullNumber[0] == "0") {
-          setFullNumber(innerHTML);
-        }
-      }
-    } else if (innerHTML == "+/-") {
-      /* Change number to negative or positive */
-      setFullNumber(-fullNumber);
-    } else if (innerHTML == "=") {
-      /* Calculate Result */
-      calcResult();
-    } else if (innerHTML == "C" || innerHTML == "CE") {
-      /* Clear All */
-      clearAll();
-    } else if (innerHTML.includes("path")) {
-      if (fullNumber !== "0") {
-        setFullNumber(fullNumber.slice(0, fullNumber.length - 1));
-      }
-    } else if (innerHTML == "%") {
-      calcPercent();
-    } else if (innerHTML == "1/x") {
-      calcdivisionByOne();
-    } else if (innerHTML == "x²") {
-      calcSquared();
-    } else if (innerHTML == "2√x") {
-      calcSqrt();
-    } else {
-      /* add operatation then calculate automatically */
-      setOperator(innerHTML);
-      setIsNumberTurn(false);
-    }
-  };
+    let key = e.key;
+    if (key) {
+      let keyCodeAsNumber = Number(key);
+      let keyCodeAsString = String(key);
 
-  /* Handle keyboard keys */
-  React.useEffect(() => {
-    const handleKeyDown = (event) => {
-      let keyCodeAsNumber = Number(event.key);
-      let keyCodeAsString = String(event.key);
-
-      if (
-        event.key === "+" ||
-        event.key === "-" ||
-        event.key === "*" ||
-        event.key === "/"
-      ) {
-        event.key === "*" ? setOperator("x") : setOperator(event.key);
+      if (key === "+" || key === "-" || key === "*" || key === "/") {
+        key === "*" ? setOperator("x") : setOperator(key);
         setIsNumberTurn(false);
-      } else if (
-        (keyCodeAsNumber >= 0 && keyCodeAsNumber <= 9) ||
-        event.key == "."
-      ) {
+      } else if ((keyCodeAsNumber >= 0 && keyCodeAsNumber <= 9) || key == ".") {
         if (isNumberTurn) {
           setShowResult(false);
           if (
-            (event.key == "." && !fullNumber.includes(".")) ||
+            (key == "." && !fullNumber.includes(".")) ||
             keyCodeAsString != "."
           ) {
             setFullNumber((prev) => prev + keyCodeAsString);
@@ -177,17 +126,66 @@ function App() {
             setFullNumber(keyCodeAsString);
           }
         }
-      } else if (event.key == "Enter") {
+      } else if (key == "Enter" || key == "=") {
         calcResult();
-      } else if (event.key == "Space") {
+      } else if (key == "Delete") {
         clearAll();
+      } else if (key == "Backspace") {
+        if (fullNumber !== "0") {
+          setFullNumber(fullNumber.slice(0, fullNumber.length - 1));
+        }
       }
-    };
-    document.addEventListener("keydown", handleKeyDown);
+    } else {
+      const innerHTML = e.target.innerHTML;
+      if ((innerHTML >= 0 && innerHTML <= 9) || innerHTML == ".") {
+        if (isNumberTurn) {
+          setShowResult(false);
+          if (
+            (innerHTML == "." && !fullNumber.includes(".")) ||
+            innerHTML !== "."
+          ) {
+            setFullNumber((prev) => prev + innerHTML);
+          }
+          if (fullNumber[0] == "0") {
+            setFullNumber(innerHTML);
+          }
+        }
+      } else if (innerHTML == "+/-") {
+        /* Change number to negative or positive */
+        setFullNumber(-fullNumber);
+      } else if (innerHTML == "=") {
+        /* Calculate Result */
+        calcResult();
+      } else if (innerHTML == "C" || innerHTML == "CE") {
+        /* Clear All */
+        clearAll();
+      } else if (innerHTML.includes("path")) {
+        if (fullNumber !== "0") {
+          setFullNumber(fullNumber.slice(0, fullNumber.length - 1));
+        }
+      } else if (innerHTML == "%") {
+        calcPercent();
+      } else if (innerHTML == "1/x") {
+        calcdivisionByOne();
+      } else if (innerHTML == "x²") {
+        calcSquared();
+      } else if (innerHTML == "2√x") {
+        calcSqrt();
+      } else {
+        /* add operatation then calculate automatically */
+        setOperator(innerHTML);
+        setIsNumberTurn(false);
+      }
+    }
+  };
+
+  /* Handle keyboard keys */
+  React.useEffect(() => {
+    document.addEventListener("keydown", handleClick);
     return () => {
-      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("keydown", handleClick);
     };
-  }, []);
+  }, [fullNumber]);
 
   /* zero fullNumber when his length arrive to 0 */
   React.useEffect(() => {
@@ -221,8 +219,6 @@ function App() {
       return fullNumber;
     }
   };
-
-  console.log(numbers, fullNumber, result);
 
   return (
     <div className="app flexCenterColumn">
